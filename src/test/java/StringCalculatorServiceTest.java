@@ -31,4 +31,11 @@ class StringCalculatorServiceTest {
         result = stringCalculatorService.add("6,4");
         assertEquals(10, result);
     }
+
+    // 2)
+    @Test
+    public void add_multipleValidInputs_returnSum(){
+        result = stringCalculatorService.add("6,4", "2,4", "8,2", "2", "");
+        assertEquals(28, result);
+    }
 }
