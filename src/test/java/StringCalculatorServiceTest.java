@@ -34,8 +34,14 @@ class StringCalculatorServiceTest {
 
     // 2)
     @Test
-    public void add_multipleValidInputs_returnSum(){
+    public void add_multipleValidInputs_returnSum() {
         result = stringCalculatorService.add("6,4", "2,4", "8,2", "2", "");
         assertEquals(28, result);
+    }
+    // 3)
+    @Test
+    public void add_newlineAndCommaSeparators_returnSum(){
+        result = stringCalculatorService.add("1,2\n3");
+        assertEquals(6, result);
     }
 }
