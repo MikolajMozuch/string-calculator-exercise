@@ -1,5 +1,7 @@
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import services.StringCalculatorService;
+import services.StringCalculatorServiceImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -7,6 +9,11 @@ class StringCalculatorServiceTest {
 
     private static StringCalculatorService stringCalculatorService;
     int result;
+
+    @BeforeEach
+    public void setUp() {
+        stringCalculatorService = new StringCalculatorServiceImpl();
+    }
 
     // 1)
     @Test
