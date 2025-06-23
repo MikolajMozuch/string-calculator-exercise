@@ -10,7 +10,7 @@ public class StringCalculatorServiceImpl implements StringCalculatorService {
         if (inputNumbers == null || inputNumbers.isEmpty()) {
             return 0;
         }
-        return sumIntegers(parseCommaSeparatedIntegers(inputNumbers));
+        return sumIntegers(NumberParser.parse(inputNumbers));
     }
 
     @Override
@@ -20,13 +20,6 @@ public class StringCalculatorServiceImpl implements StringCalculatorService {
             totalSum += add(input);
         }
         return totalSum;
-    }
-
-
-    private int[] parseCommaSeparatedIntegers(String inputNumbers) {
-        return Arrays.stream(inputNumbers.split(","))
-                .mapToInt(Integer::parseInt)
-                .toArray();
     }
 
     private int sumIntegers(int[] numbers) {
