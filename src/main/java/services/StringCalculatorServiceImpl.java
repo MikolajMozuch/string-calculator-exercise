@@ -13,6 +13,15 @@ public class StringCalculatorServiceImpl implements StringCalculatorService {
         return sumIntegers(parseCommaSeparatedIntegers(inputNumbers));
     }
 
+    @Override
+    public int add(String... args) {
+        int totalSum = 0;
+        for (String input : args) {
+            totalSum += add(input);
+        }
+        return totalSum;
+    }
+
 
     private int[] parseCommaSeparatedIntegers(String inputNumbers) {
         return Arrays.stream(inputNumbers.split(","))
