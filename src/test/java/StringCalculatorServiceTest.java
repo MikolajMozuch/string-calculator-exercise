@@ -5,6 +5,7 @@ import services.StringCalculatorService;
 import services.StringCalculatorServiceImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class StringCalculatorServiceTest {
 
@@ -43,7 +44,36 @@ class StringCalculatorServiceTest {
     // 3)
     @Test
     public void addNewlineAndCommaSeparatorsReturnSum() throws IncorrectInputFormatException {
-        result = stringCalculatorService.add("1,2\n3");
+        result = stringCalculatorService.add("1\n2\n3");
         assertEquals(6, result);
     }
+
+    //5)
+    @Test
+    public void addWithCustomSemicolonDelimiterReturnsSum() throws IncorrectInputFormatException {
+        result = stringCalculatorService.add("//;\n1;3");
+        assertEquals(4, result);
+    }
+
+    @Test
+    public void addWithCustomPipeDelimiterReturnsSum() throws IncorrectInputFormatException {
+        result = stringCalculatorService.add("//|\n1|2|3");
+        assertEquals(6, result);
+    }
+
+    @Test
+    public void addWithCustomStringDelimiterReturnsSum() throws IncorrectInputFormatException {
+        result = stringCalculatorService.add("//sep\n2sep5");
+        assertEquals(7, result);
+    }
+
+    @Test
+    public void addWithMixedDelimitersThrowsIncorrectInputFormatException() {
+        IncorrectInputFormatException exception = assertThrows(
+                IncorrectInputFormatException.class,
+                () -> stringCalculatorService.add("//|\n1|2,3")
+        );
+        assertEquals("'|' expected but ',' found at position 3.", exception.getMessage());
+    }
+
 }
