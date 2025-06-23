@@ -1,9 +1,11 @@
 package services;
 
+import exception.IncorrectInputFormatException;
+
 public interface StringCalculatorService {
 
-    int add(String inputNumbers);
+    int add(String inputNumbers) throws IncorrectInputFormatException;
 
-    int add(String... args);
+    int add(String... args) throws IncorrectInputFormatException;
 
 }

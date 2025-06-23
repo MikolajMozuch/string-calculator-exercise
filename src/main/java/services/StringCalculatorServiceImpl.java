@@ -1,20 +1,21 @@
 package services;
 
+import exception.IncorrectInputFormatException;
+
 import java.util.Arrays;
 
 public class StringCalculatorServiceImpl implements StringCalculatorService {
 
-
     @Override
-    public int add(String inputNumbers) {
+    public int add(String inputNumbers) throws IncorrectInputFormatException {
         if (inputNumbers == null || inputNumbers.isEmpty()) {
             return 0;
         }
-        return sumIntegers(NumberParser.parse(inputNumbers));
+        return sumIntegers(CustomStringDelimiterParser.parse(inputNumbers));
     }
 
     @Override
-    public int add(String... args) {
+    public int add(String... args)  throws IncorrectInputFormatException{
         int totalSum = 0;
         for (String input : args) {
             totalSum += add(input);
