@@ -9,11 +9,12 @@ public class InputValidator {
     public static void isSeparatorAtTheEnd(String inputNumbers, String delimiter) throws IncorrectInputFormatException {
         if (delimiter.equals(CustomStringDelimiterParser.DELIMITER_DEFAULT)) {
             if (inputNumbers.endsWith(CustomStringDelimiterParser.DELIMITER_COMMA)
-                    || inputNumbers.endsWith(CustomStringDelimiterParser.DELIMITER_NEW_LINE)) {
+                    || inputNumbers.endsWith(CustomStringDelimiterParser.DELIMITER_NEW_LINE)
+            ||inputNumbers.endsWith(CustomStringDelimiterParser.DELIMITER_PIPE)) {
                 throw new IncorrectInputFormatException(END_WITH_SEPARATOR_EXCEPTION_MESSAGE);
             }
-        } else if (inputNumbers.endsWith(delimiter)) {
-            throw new IncorrectInputFormatException(END_WITH_SEPARATOR_EXCEPTION_MESSAGE);
+        } else if(inputNumbers.endsWith(delimiter)) {
+                throw new IncorrectInputFormatException(END_WITH_SEPARATOR_EXCEPTION_MESSAGE);
         }
     }
 }
