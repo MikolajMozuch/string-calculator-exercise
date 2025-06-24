@@ -9,13 +9,13 @@ import java.util.stream.Stream;
 
 public class CustomStringDelimiterParser {
 
-    public static final String DELIMITER_DEFAULT = "[,|\\n]";
+    public static final String DELIMITER_DEFAULT = "[,|\\n]"; // Default delimiters: comma, pipe, and newline
     public static final String DELIMITER_COMMA = ",";
     public static final String DELIMITER_NEW_LINE = "\n";
-    public static final String DELIMITER_PREFIX = "//";
+    public static final String DELIMITER_PREFIX = "//"; // Prefix for custom delimiter definition
     public static final String DELIMITER_PIPE = "|";
 
-    public static List<Integer> parse(String input, List<String> errors) {
+    public static List<Integer> parseAndValidateInput(String input, List<String> errors) {
         String delimiter = DELIMITER_DEFAULT;
 
         if (input.startsWith(DELIMITER_PREFIX)) {
@@ -32,20 +32,17 @@ public class CustomStringDelimiterParser {
         String regex = delimiterRegex.equals(DELIMITER_DEFAULT) ? delimiterRegex : Pattern.quote(delimiterRegex);
 
         List<Integer> result;
-        try {
+        try { // Attempt to parse numbers using the specified delimiter
             result = parseNumbersByDelimiter(input, regex);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException e) { // Fallback to salvage valid numbers if parsing fails
             result = fallbackParseNumbers(input);
-            if (errors.isEmpty()) {
-                errors.add("Invalid number format.");
-            }
         }
         return result;
     }
 
     public static List<Integer> fallbackParseNumbers(String input) {
         return Arrays.stream(input.split(DELIMITER_DEFAULT))
-                .filter(s -> !s.isBlank())
+                .filter(s -> !s.isBlank()) //removes empty strings
                 .flatMap(s -> {
                     try {
                         return Stream.of(Integer.parseInt(s));

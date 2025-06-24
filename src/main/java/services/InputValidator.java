@@ -44,7 +44,7 @@ public class InputValidator {
 
     private static void validateDelimiterUsage(String input, String delimiter, List<String> errors) {
         Pattern pattern = delimiter.equals(CustomStringDelimiterParser.DELIMITER_DEFAULT)
-                ? Pattern.compile("-?\\d+|,|\\||\\n")
+                ? Pattern.compile(Pattern.quote(CustomStringDelimiterParser.DELIMITER_DEFAULT))
                 : Pattern.compile("-?\\d+|" + Pattern.quote(delimiter));
         Matcher matcher = pattern.matcher(input);
         int index = 0;

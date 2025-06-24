@@ -8,6 +8,7 @@ import java.util.List;
 public class StringCalculatorServiceImpl implements StringCalculatorService {
 
     private static final int MAX_ALLOWED_NUMBER = 1000;
+
     @Override
     public int add(String inputNumbers) throws IncorrectInputFormatException {
         if (inputNumbers == null || inputNumbers.isEmpty()) {
@@ -17,17 +18,6 @@ public class StringCalculatorServiceImpl implements StringCalculatorService {
         return sumIntegers(numbers);
     }
 
-    private List<Integer> extractAndValidateData(String inputNumbers) throws IncorrectInputFormatException {
-        List<String> errors = new ArrayList<>();
-        List<Integer> numbers = CustomStringDelimiterParser.parse(inputNumbers, errors);
-
-        if (!errors.isEmpty()) {
-            throw new IncorrectInputFormatException(String.join("\n", errors));
-        }
-
-        return numbers;
-    }
-
     @Override
     public int add(String... args) throws IncorrectInputFormatException {
         int totalSum = 0;
@@ -35,6 +25,17 @@ public class StringCalculatorServiceImpl implements StringCalculatorService {
             totalSum += add(input);
         }
         return totalSum;
+    }
+
+    private List<Integer> extractAndValidateData(String inputNumbers) throws IncorrectInputFormatException {
+        List<String> errors = new ArrayList<>();
+        List<Integer> numbers = CustomStringDelimiterParser.parseAndValidateInput(inputNumbers, errors);
+
+        if (!errors.isEmpty()) {
+            throw new IncorrectInputFormatException(String.join("\n", errors));
+        }
+
+        return numbers;
     }
 
     private int sumIntegers(List<Integer> numbers) {
