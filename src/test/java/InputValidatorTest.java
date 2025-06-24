@@ -23,7 +23,6 @@ public class InputValidatorTest {
         assertTrue(errors.contains("Input data cannot end with the separator"));
     }
 
-    //6)
     @Test
     public void verifyNegativeNumbersInputContainsOneNegativeNumberAddsError() {
         List<String> errors = new ArrayList<>();

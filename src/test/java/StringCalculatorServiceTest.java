@@ -16,7 +16,6 @@ class StringCalculatorServiceTest {
         stringCalculatorService = new StringCalculatorServiceImpl();
     }
 
-    // 1)
     @Test
     public void addEmptyStringReturnZero() throws IncorrectInputFormatException {
         assertEquals(0, stringCalculatorService.add(""));
@@ -33,21 +32,18 @@ class StringCalculatorServiceTest {
         assertEquals(10, result);
     }
 
-    // 2)
     @Test
     public void addMultipleValidInputsReturnSum() throws IncorrectInputFormatException {
         result = stringCalculatorService.add("6,4", "2,4", "8,2", "2", "");
         assertEquals(28, result);
     }
 
-    // 3)
     @Test
     public void addNewlineAndCommaSeparatorsReturnSum() throws IncorrectInputFormatException {
         result = stringCalculatorService.add("1\n2\n3");
         assertEquals(6, result);
     }
 
-    //5)
     @Test
     public void addWithCustomSemicolonDelimiterReturnsSum() throws IncorrectInputFormatException {
         result = stringCalculatorService.add("//;\n1;3");
@@ -74,6 +70,7 @@ class StringCalculatorServiceTest {
         );
         assertEquals("'|' expected but ',' found at position 3.", exception.getMessage());
     }
+
     @Test
     public void testAddWithMultipleErrorsAllErrorReturnMessageSeparatedByNewlines() {
         String input = "//|\n1|2,-3";
@@ -85,5 +82,23 @@ class StringCalculatorServiceTest {
 
         String expectedMessage = "Negative number(s) not allowed: -3\n'|' expected but ',' found at position 3.";
         assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    public void addWithNumbersAboveLimitIgnoresThemAndReturnsSum() throws IncorrectInputFormatException {
+        result = stringCalculatorService.add("1,2,3,1001");
+        assertEquals(6, result);
+    }
+
+    @Test
+    public void addWithMaxLimitValueReturnsThatValue() throws IncorrectInputFormatException {
+        result = stringCalculatorService.add("1000");
+        assertEquals(1000, result);
+    }
+
+    @Test
+    public void addWithValueAboveLimitReturnsZero() throws IncorrectInputFormatException {
+        result = stringCalculatorService.add("1001");
+        assertEquals(0, result);
     }
 }
