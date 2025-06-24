@@ -4,8 +4,7 @@ import org.junit.jupiter.api.Test;
 import services.StringCalculatorService;
 import services.StringCalculatorServiceImpl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class StringCalculatorServiceTest {
 
@@ -75,5 +74,16 @@ class StringCalculatorServiceTest {
         );
         assertEquals("'|' expected but ',' found at position 3.", exception.getMessage());
     }
+    @Test
+    public void testAddWithMultipleErrorsAllErrorReturnMessageSeparatedByNewlines() {
+        String input = "//|\n1|2,-3";
 
+        IncorrectInputFormatException exception = assertThrows(
+                IncorrectInputFormatException.class,
+                () -> stringCalculatorService.add(input)
+        );
+
+        String expectedMessage = "Negative number(s) not allowed: -3\n'|' expected but ',' found at position 3.";
+        assertEquals(expectedMessage, exception.getMessage());
+    }
 }
