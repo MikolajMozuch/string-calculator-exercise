@@ -7,6 +7,7 @@ import java.util.List;
 
 public class StringCalculatorServiceImpl implements StringCalculatorService {
 
+    private static final int MAX_ALLOWED_NUMBER = 1000;
     @Override
     public int add(String inputNumbers) throws IncorrectInputFormatException {
         if (inputNumbers == null || inputNumbers.isEmpty()) {
@@ -38,6 +39,7 @@ public class StringCalculatorServiceImpl implements StringCalculatorService {
 
     private int sumIntegers(List<Integer> numbers) {
         return numbers.stream()
+                .filter(n -> n <= MAX_ALLOWED_NUMBER)
                 .reduce(0, Integer::sum);
     }
 
