@@ -11,7 +11,9 @@ public class StringCalculatorServiceImpl implements StringCalculatorService {
         if (inputNumbers == null || inputNumbers.isEmpty()) {
             return 0;
         }
-        return sumIntegers(CustomStringDelimiterParser.parse(inputNumbers));
+        int[] numbers = CustomStringDelimiterParser.parse(inputNumbers);
+        InputValidator.verifyNoNegativeNumbers(numbers);
+        return sumIntegers(numbers);
     }
 
     @Override
