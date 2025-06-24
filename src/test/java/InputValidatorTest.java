@@ -3,8 +3,8 @@ import org.junit.jupiter.api.Test;
 import services.CustomStringDelimiterParser;
 import services.InputValidator;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class InputValidatorTest {
 
@@ -20,5 +20,27 @@ public class InputValidatorTest {
         var exception = assertThrows(IncorrectInputFormatException.class, ()
                 -> InputValidator.isSeparatorAtTheEnd("1\n2\n", CustomStringDelimiterParser.DELIMITER_NEW_LINE));
         assertEquals("Input data cannot end with the separator", exception.getMessage());
+    }
+    // 6)
+    @Test
+    public void verifyNegativeNumbersInputContainsOneNegativeNumberThrowException() {
+        int[] input = {1, -2, 3};
+        var exception = assertThrows(IncorrectInputFormatException.class, () ->
+                InputValidator.verifyNoNegativeNumbers(input));
+        assertEquals("Negative number(s) not allowed: -2", exception.getMessage());
+    }
+
+    @Test
+    public void verifyNegativeNumbersInputContainsMultipleNegativeNumbersThrowException() {
+        int[] input = {1, -2, -3, -4};
+        var exception = assertThrows(IncorrectInputFormatException.class, () ->
+                InputValidator.verifyNoNegativeNumbers(input));
+        assertEquals("Negative number(s) not allowed: -2, -3, -4", exception.getMessage());
+    }
+
+    @Test
+    public void verifyNegativeNumbersInputContainsOnlyPositiveNumbersDoesNotThrowException() {
+        int[] input = {1, 2, 3};
+        assertDoesNotThrow(() -> InputValidator.verifyNoNegativeNumbers(input));
     }
 }
