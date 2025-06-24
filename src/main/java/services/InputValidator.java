@@ -1,33 +1,75 @@
 package services;
 
-import exception.IncorrectInputFormatException;
-
-import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class InputValidator {
 
     private static final String END_WITH_SEPARATOR_EXCEPTION_MESSAGE = "Input data cannot end with the separator";
 
-    public static void isSeparatorAtTheEnd(String inputNumbers, String delimiter) throws IncorrectInputFormatException {
+    public static void validateInput(String input, String delimiter, List<String> errors) {
+        if (input == null || input.isEmpty()) {
+            return;
+        }
+        checkEndsWithDelimiter(input, delimiter, errors);
+        checkNegativeNumbers(input, delimiter, errors);
+        validateDelimiterUsage(input, delimiter, errors);
+    }
+
+    public static void checkEndsWithDelimiter(String input, String delimiter, List<String> errors) {
         if (delimiter.equals(CustomStringDelimiterParser.DELIMITER_DEFAULT)) {
-            if (inputNumbers.endsWith(CustomStringDelimiterParser.DELIMITER_COMMA)
-                    || inputNumbers.endsWith(CustomStringDelimiterParser.DELIMITER_NEW_LINE)
-            ||inputNumbers.endsWith(CustomStringDelimiterParser.DELIMITER_PIPE)) {
-                throw new IncorrectInputFormatException(END_WITH_SEPARATOR_EXCEPTION_MESSAGE);
+            if (input.endsWith(CustomStringDelimiterParser.DELIMITER_COMMA)
+                    || input.endsWith(CustomStringDelimiterParser.DELIMITER_NEW_LINE)
+                    || input.endsWith(CustomStringDelimiterParser.DELIMITER_PIPE)) {
+                errors.add(END_WITH_SEPARATOR_EXCEPTION_MESSAGE);
             }
-        } else if(inputNumbers.endsWith(delimiter)) {
-                throw new IncorrectInputFormatException(END_WITH_SEPARATOR_EXCEPTION_MESSAGE);
+        } else if (input.endsWith(delimiter)) {
+            errors.add(END_WITH_SEPARATOR_EXCEPTION_MESSAGE);
         }
     }
-    public static void verifyNoNegativeNumbers(int[] numbers) throws IncorrectInputFormatException {
-        String negativeNumbers = Arrays.stream(numbers)
+
+    public static void checkNegativeNumbers(String input, String delimiter, List<String> errors) {
+        List<Integer> numbers = parseNumbersForNegativeCheck(input, delimiter);
+        String negativeNumbers = numbers.stream()
                 .filter(n -> n < 0)
-                .mapToObj(Integer::toString)
+                .map(Object::toString)
                 .collect(Collectors.joining(", "));
 
         if (!negativeNumbers.isEmpty()) {
-            throw new IncorrectInputFormatException("Negative number(s) not allowed: " + negativeNumbers);
+            errors.add("Negative number(s) not allowed: " + negativeNumbers);
         }
+    }
+
+    private static void validateDelimiterUsage(String input, String delimiter, List<String> errors) {
+        Pattern pattern = delimiter.equals(CustomStringDelimiterParser.DELIMITER_DEFAULT)
+                ? Pattern.compile("-?\\d+|,|\\||\\n")
+                : Pattern.compile("-?\\d+|" + Pattern.quote(delimiter));
+        Matcher matcher = pattern.matcher(input);
+        int index = 0;
+
+        while (matcher.find()) {
+            if (matcher.start() != index) {
+                char unexpectedChar = input.charAt(index);
+                errors.add("'" + delimiter + "' expected but '" + unexpectedChar + "' found at position " + index + ".");
+                return;
+            }
+            index = matcher.end();
+        }
+    }
+
+    private static List<Integer> parseNumbersForNegativeCheck(String input, String delimiter) {
+        String delimiterRegex = delimiter.equals(CustomStringDelimiterParser.DELIMITER_DEFAULT)
+                ? CustomStringDelimiterParser.DELIMITER_DEFAULT
+                : Pattern.quote(delimiter);
+
+        List<Integer> numbers;
+        try {
+            numbers = CustomStringDelimiterParser.parseNumbersByDelimiter(input, delimiterRegex);
+        } catch (NumberFormatException e) {
+            numbers = CustomStringDelimiterParser.fallbackParseNumbers(input);
+        }
+        return numbers;
     }
 }
